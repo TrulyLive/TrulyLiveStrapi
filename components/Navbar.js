@@ -31,11 +31,7 @@ function Navbar({ navData }) {
         <ul className={navClass}>
           {navData.navlink.map((link) => (
             <li key={link.id}>
-              <Link
-                href={
-                  link.navlink === 'Watch a show' ? 'https://platform.trulylive.com/' : `#${formatLink(link.navlink)}`
-                }
-              >
+              <Link href={link.navlink === 'Watch a show' ? '/video' : `#${formatLink(link.navlink)}`}>
                 <a onClick={() => setOpen(false)} className="text-scGray7 hover:text-pmRed1 font-light">
                   {link.navlink}
                 </a>
