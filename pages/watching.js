@@ -1,44 +1,36 @@
-import { useEffect } from 'react'
 import Head from 'next/head'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
 import { baseUrl } from '../backend'
 import cookie from 'cookie'
+import Image from 'next/image'
 
-export default function Home({ navData, footerData, videoData, profileData, token }) {
-  useEffect(() => {
-    const addToDB = async () => {
-      try {
-        const res = await fetch(`${baseUrl}/visits`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({ data: { username: profileData?.username, email: profileData?.email } })
-        })
-        const data = await res.json()
-      } catch (error) {
-        console.log(error)
-        // alert(error.response.data.message[0].messages[0].message)
-      }
-    }
-    addToDB()
-  }, [profileData?.username, profileData?.email, token])
-
+export default function Home({ navData, footerData, profileData }) {
   return (
     <>
       <Head>
-        <title>Truly Live | Video</title>
+        <title>Truly Live | Watching</title>
         <meta name="description" content="Truly Live - 100% Live by definition" />
       </Head>
       <Navbar navData={navData} />
-      <video
-        src={videoData?.videoURL}
-        controls
-        className="min-w-full"
-        poster={videoData?.videoThumbnail?.data?.attributes?.url}
-      />
+      <div className="my-32 px-4 md:px-20 container">
+        <div className="grid grid-cols-1 md:grid-cols-4 my-2">
+          {profileData?.map((item) => {
+            return (
+              <div key={item.id}>
+                <Image
+                  blurDataURL={item?.image?.url}
+                  src={item?.image?.url}
+                  alt="pics"
+                  height={300}
+                  width={300}
+                  placeholder="blur"
+                />
+              </div>
+            )
+          })}
+        </div>
+      </div>
       <Footer footerData={footerData} />
     </>
   )
@@ -63,7 +55,7 @@ export const getServerSideProps = async ({ req }) => {
     }
   }
 
-  const res = await fetch(`${baseUrl}/users/me`, {
+  const res = await fetch(`${baseUrl}/users?populate=*`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -75,7 +67,6 @@ export const getServerSideProps = async ({ req }) => {
       navData: navData.data[0].attributes,
       videoData: videoData.data[0].attributes,
       footerData: footerData.data[0].attributes,
-      token,
       profileData: data
     }
   }

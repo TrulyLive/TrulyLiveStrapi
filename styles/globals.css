@@ -198,6 +198,10 @@ details[open] .faq-ans {
   color: #ee1f26;
 }
 
+.my-in-clr{
+  border: 1px solid gray;
+}
+
 @media (max-width: 768px) {
   .factbox {
     width: 100%;

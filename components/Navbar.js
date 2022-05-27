@@ -2,12 +2,16 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { FaBars } from 'react-icons/fa'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
+import cookie from 'js-cookie'
 
 function Navbar({ navData }) {
   const classStr =
     'absolute left-0 top-full pl-20 py-8 w-full space-y-6 bg-black lg:py-0 lg:pl-0 lg:space-y-0 lg:w-max lg:static lg:flex gap-6 justify-between items-center text-scGray6'
   const [open, setOpen] = useState(false)
   const [navClass, setNavClass] = useState(classStr)
+
+  const [token, setToken] = useState(cookie.get('token'))
 
   useEffect(() => {
     if (open) setNavClass(classStr)
@@ -17,6 +21,8 @@ function Navbar({ navData }) {
   function formatLink(link) {
     return link.toLowerCase().replace(/ /g, '-')
   }
+
+  const router = useRouter()
 
   return (
     <nav className="bg-pureBlack text-pureWhite fixed top-0 left-0 w-full z-50">
@@ -38,6 +44,42 @@ function Navbar({ navData }) {
               </Link>
             </li>
           ))}
+          {!token ? (
+            <>
+              <li>
+                <Link href="/login">
+                  <a onClick={() => setOpen(false)} className="text-scGray7 hover:text-pmRed1 font-light">
+                    login
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/register">
+                  <a onClick={() => setOpen(false)} className="text-scGray7 hover:text-pmRed1 font-light">
+                    register
+                  </a>
+                </Link>
+              </li>
+            </>
+          ) : (
+            <>
+              <Link href="/watching">
+                <a>
+                  <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Watching</li>
+                </a>
+              </Link>
+
+              <li
+                className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer"
+                onClick={() => {
+                  cookie.remove('token')
+                  router.push('/')
+                }}
+              >
+                Logout
+              </li>
+            </>
+          )}
         </ul>
         <FaBars onClick={() => setOpen((prev) => !prev)} className="lg:hidden text-pureWhite text-3xl cursor-pointer" />
       </div>
