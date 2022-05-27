@@ -6,6 +6,7 @@ import cookie from 'cookie'
 import Image from 'next/image'
 
 export default function Home({ navData, footerData, profileData }) {
+  console.log(profileData)
   return (
     <>
       <Head>
@@ -17,15 +18,17 @@ export default function Home({ navData, footerData, profileData }) {
         <div className="grid grid-cols-1 md:grid-cols-4 my-2">
           {profileData?.map((item) => {
             return (
-              <div key={item.id}>
-                <Image
-                  blurDataURL={item?.image?.url}
-                  src={item?.image?.url}
-                  alt="pics"
-                  height={300}
-                  width={300}
-                  placeholder="blur"
-                />
+              <div key={item?.id}>
+                {item?.image && (
+                  <Image
+                    blurDataURL={item?.image?.url}
+                    src={item?.image?.url}
+                    alt="pics"
+                    height={300}
+                    width={300}
+                    placeholder="blur"
+                  />
+                )}
               </div>
             )
           })}
