@@ -37,7 +37,7 @@ function Navbar({ navData }) {
         <ul className={navClass}>
           {navData.navlink.map((link) => (
             <li key={link.id}>
-              <Link href={link.navlink === 'Watch a show' ? '/video' : `#${formatLink(link.navlink)}`}>
+              <Link href={`/#${formatLink(link.navlink)}`}>
                 <a onClick={() => setOpen(false)} className="text-scGray7 hover:text-pmRed1 font-light">
                   {link.navlink}
                 </a>
@@ -49,26 +49,27 @@ function Navbar({ navData }) {
               <li>
                 <Link href="/login">
                   <a onClick={() => setOpen(false)} className="text-scGray7 hover:text-pmRed1 font-light">
-                    login
-                  </a>
-                </Link>
-              </li>
-              <li>
-                <Link href="/register">
-                  <a onClick={() => setOpen(false)} className="text-scGray7 hover:text-pmRed1 font-light">
-                    register
+                    Login
                   </a>
                 </Link>
               </li>
             </>
           ) : (
             <>
-              <Link href="/watching">
-                <a>
-                  <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Watching</li>
-                </a>
-              </Link>
-
+              <li>
+                <Link href="/watching">
+                  <a>
+                    <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Watching</li>
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/video">
+                  <a>
+                    <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Watch a show</li>
+                  </a>
+                </Link>
+              </li>
               <li
                 className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer"
                 onClick={() => {
