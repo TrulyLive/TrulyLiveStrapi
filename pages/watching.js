@@ -6,7 +6,6 @@ import cookie from 'cookie'
 import Image from 'next/image'
 
 export default function Home({ navData, footerData, profileData }) {
-  console.log(profileData)
   return (
     <>
       <Head>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { baseUrl } from '../backend'
 import cookie from 'cookie'
 import Navbar from '../components/Navbar'
@@ -10,17 +10,24 @@ import { useRouter } from 'next/router'
 import Spinner from '../components/Spinner'
 import { toast } from 'react-toastify'
 
-const OnBoardingPage = ({ navData, footerData, profileData, token }) => {
+const AccountPage = ({ navData, footerData, profileData, token }) => {
   const router = useRouter()
 
   const types = ['image/png', 'image/jpg', 'image/jpeg']
 
-  const [imagePreview, setImagePreview] = useState(null)
   const [image, setImage] = useState(null)
   const [number, setNumber] = useState('')
+  const [username, setUsername] = useState('')
   const [mailBox, setMailBox] = useState(false)
   const [loading, setLoading] = useState(false)
   const [imgLoading, setImgLoading] = useState(false)
+
+  useEffect(() => {
+    setUsername(profileData?.username)
+    setNumber(profileData?.phoneNo)
+    setMailBox(profileData?.isSubscribeMail)
+    setImage([profileData?.image])
+  }, [profileData?.username, profileData?.phoneNo, profileData?.isSubscribeMail, profileData?.image])
 
   const uploadImg = async (formData) => {
     try {
@@ -40,7 +47,7 @@ const OnBoardingPage = ({ navData, footerData, profileData, token }) => {
     }
   }
 
-  const updateProile = async (image, number, mailBox) => {
+  const updateProile = async (image, number, mailBox, username) => {
     try {
       setLoading(true)
       const res = await fetch(`${baseUrl}/users/${profileData?.id}`, {
@@ -49,13 +56,13 @@ const OnBoardingPage = ({ navData, footerData, profileData, token }) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ image, phoneNo: number, onBoarded: true, isSubscribeMail: mailBox })
+        body: JSON.stringify({ image, phoneNo: number, onBoarded: true, isSubscribeMail: mailBox, username })
       })
-      const data = await res.json()
+      await res.json()
       if (res.ok) {
         setLoading(false)
         toast.success('Profile updated successfully')
-        router.push('/video')
+        router.push('/')
       }
     } catch (err) {
       alert(err)
@@ -65,7 +72,6 @@ const OnBoardingPage = ({ navData, footerData, profileData, token }) => {
   const handleFileChange = (e) => {
     const selected = e.target.files[0]
     if (selected && types.includes(selected.type)) {
-      setImagePreview(selected)
       const formData = new FormData()
       formData.append('files', selected)
       formData.append('ref', 'images')
@@ -78,38 +84,28 @@ const OnBoardingPage = ({ navData, footerData, profileData, token }) => {
 
   const handleProfileEdit = (e) => {
     e.preventDefault()
-    if (image && number) {
-      updateProile(image, number, mailBox)
-    } else {
-      toast.error('Please fill everything out')
-    }
+    updateProile(image, number, mailBox, username)
   }
 
   return (
     <>
       <Head>
-        <title>Truly Live | Onboarding</title>
+        <title>Truly Live | Profile</title>
         <meta name="description" content="Truly Live - 100% Live by definition" />
       </Head>
       <Navbar navData={navData} />
       <div className="my-20 md:px-20 px-4 container">
         <form onSubmit={handleProfileEdit}>
-          <h1 className="text-center text-2xl font-semibold">Onboarding</h1>
+          <h1 className="text-center text-2xl font-semibold">User Profile</h1>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-5 items-center my-10">
             <p className="md:text-xl">Profile Picture</p>
             {imgLoading ? (
               <div>
                 <Spinner />
               </div>
-            ) : imagePreview ? (
+            ) : image ? (
               <label htmlFor="file-input" className="cursor-pointer">
-                <img
-                  src={URL.createObjectURL(imagePreview)}
-                  alt="profile-pic"
-                  height={170}
-                  width={170}
-                  className="rounded-2xl"
-                />
+                <img src={image[0]?.url} alt="profile-pic" height={170} width={170} className="rounded-2xl" />
                 <FiEdit className="my-2" fontSize="1.2rem" />
               </label>
             ) : (
@@ -119,6 +115,16 @@ const OnBoardingPage = ({ navData, footerData, profileData, token }) => {
               </label>
             )}
             <input id="file-input" type="file" className="hidden" onChange={handleFileChange} />
+          </div>
+          <div className="grid md:grid-cols-2 grid-cols-1 gap-5 items-center my-10">
+            <p className="md:text-xl">Username</p>
+            <input
+              type="text"
+              name="username"
+              className="p-1 my-in-clr rounded-md"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
           </div>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-5 items-center my-10">
             <p className="md:text-xl">Phone number</p>
@@ -180,15 +186,6 @@ export const getServerSideProps = async ({ req }) => {
     }
   }
 
-  if (data?.onBoarded) {
-    return {
-      redirect: {
-        destination: '/video',
-        permanent: false
-      }
-    }
-  }
-
   return {
     props: {
       navData: navData.data[0].attributes,
@@ -199,4 +196,4 @@ export const getServerSideProps = async ({ req }) => {
   }
 }
 
-export default OnBoardingPage
+export default AccountPage

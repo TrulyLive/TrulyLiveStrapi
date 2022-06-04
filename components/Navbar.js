@@ -25,7 +25,7 @@ function Navbar({ navData }) {
   const router = useRouter()
 
   return (
-    <nav className="bg-pureBlack text-pureWhite fixed top-0 left-0 w-full z-50">
+    <nav className="bg-pureBlack text-pureWhite fixed top-0 w-full z-50">
       <div className="container px-8 w-11/12 max-w-6xl mx-auto lg:px-0 flex justify-between items-center">
         <Link href="/">
           <a>
@@ -44,6 +44,13 @@ function Navbar({ navData }) {
               </Link>
             </li>
           ))}
+          <li>
+            <Link href="/events">
+              <a onClick={() => setOpen(false)} className="text-scGray7 hover:text-pmRed1 font-light">
+                Events
+              </a>
+            </Link>
+          </li>
           {!token ? (
             <>
               <li>
@@ -56,6 +63,13 @@ function Navbar({ navData }) {
             </>
           ) : (
             <>
+              <li>
+                <Link href="/account">
+                  <a>
+                    <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Account</li>
+                  </a>
+                </Link>
+              </li>
               <li>
                 <Link href="/watching">
                   <a>
