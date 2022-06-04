@@ -67,9 +67,11 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
         </span>
 
         {!token && (
-          <Link href="/login">
-            <a className="bg-[#222222] text-white py-1 px-2 rounded-md outline-none">Log in to buy</a>
-          </Link>
+          <div className="my-5">
+            <Link href="/login">
+              <a className="bg-[#222222] text-white py-1 px-2 rounded-md outline-none">Log in to buy</a>
+            </Link>
+          </div>
         )}
 
         {!checkBought && token ? (
@@ -79,23 +81,25 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
             </button>
           </div>
         ) : (
-          <div>
-            <h2 className="my-5 text-xl">Exclusive Assets</h2>
-            {eventData?.eventAssets?.map((item, i) => {
-              return (
-                <Image
-                  key={i}
-                  src={item?.eventMedia?.data?.attributes?.url}
-                  blurDataURL={item?.eventMedia?.data?.attributes?.url}
-                  width={300}
-                  height={350}
-                  placeholder="blur"
-                  className="my-5"
-                  alt="event"
-                />
-              )
-            })}
-          </div>
+          token && (
+            <div>
+              <h2 className="my-5 text-xl">Exclusive Assets</h2>
+              {eventData?.eventAssets?.map((item, i) => {
+                return (
+                  <Image
+                    key={i}
+                    src={item?.eventMedia?.data?.attributes?.url}
+                    blurDataURL={item?.eventMedia?.data?.attributes?.url}
+                    width={300}
+                    height={350}
+                    placeholder="blur"
+                    className="my-5"
+                    alt="event"
+                  />
+                )
+              })}
+            </div>
+          )
         )}
       </div>
 
@@ -131,7 +135,7 @@ export const getServerSideProps = async ({ req, query: { slug } }) => {
       eventData: eventData?.data[0]?.attributes,
       eventId: eventData?.data[0]?.id,
       profileData: data,
-      token
+      token: token ? token : ''
     }
   }
 }
