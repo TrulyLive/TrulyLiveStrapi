@@ -37,7 +37,8 @@ export const getStaticProps = async () => {
       navData: navData.data[0].attributes,
       footerData: footerData.data[0].attributes,
       eventData
-    }
+    },
+    revalidate: 1
   }
 }
 

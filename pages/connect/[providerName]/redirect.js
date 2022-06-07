@@ -12,6 +12,7 @@ const LoginRedirect = () => {
       ? router?.asPath.slice(24, router.asPath.length)
       : router?.asPath.slice(26, router.asPath.length)
 
+  const localRoute = typeof window !== 'undefined' && localStorage.getItem('route')
   useEffect(() => {
     const redirectTest = async () => {
       if (router?.query?.providerName && tokens) {
@@ -22,7 +23,7 @@ const LoginRedirect = () => {
             cookie.set('token', data.jwt, {
               expires: 5
             })
-            setTimeout(() => router.push('/onboarding'), 1000)
+            setTimeout(() => (localRoute ? router.push(`/events/${localRoute}`) : router.push('/onboarding')), 1000)
             toast('Logged in successfully')
           } else {
             toast.error(data?.error?.message)

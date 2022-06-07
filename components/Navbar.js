@@ -65,23 +65,17 @@ function Navbar({ navData }) {
             <>
               <li>
                 <Link href="/account">
-                  <a>
-                    <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Account</li>
-                  </a>
+                  <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Account</li>
                 </Link>
               </li>
               <li>
                 <Link href="/watching">
-                  <a>
-                    <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Watching</li>
-                  </a>
+                  <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Watching</li>
                 </Link>
               </li>
               <li>
                 <Link href="/video">
-                  <a>
-                    <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Watch a show</li>
-                  </a>
+                  <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Watch a show</li>
                 </Link>
               </li>
               <li
@@ -89,6 +83,7 @@ function Navbar({ navData }) {
                 onClick={() => {
                   cookie.remove('token')
                   router.push('/')
+                  typeof window !== 'undefined' && localStorage.removeItem('route')
                 }}
               >
                 Logout
