@@ -67,7 +67,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
   return (
     <>
       <Head>
-        <title>Truly Live | Events</title>
+        <title>Truly Live | {eventData?.eventName}</title>
         <meta name="description" content="Truly Live - 100% Live by definition" />
       </Head>
       <Navbar navData={navData} />
@@ -124,7 +124,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
           </div>
         )}
 
-        {profileTickets.length >= 1 && notBoughtTickets && (
+        {profileTickets?.length >= 1 && notBoughtTickets && (
           <div className="my-5">
             {notBoughtTickets.map((item) => {
               return (
@@ -178,45 +178,47 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
               )
             })}
           </div>
-          <div>
-            <h4 className="text-xl my-3 text-center mb-5 font-semibold">Ticket only assets</h4>
-            {checkBought &&
-              token &&
-              eventData?.imageEventAssets?.map((item) => {
-                return (
-                  <div key={item?.id}>
-                    {!item?.isPublic && (
-                      <div className="my-2">
-                        <Image
-                          src={item?.imageEventMedia?.data?.attributes?.url}
-                          blurDataURL={item?.imageEventMedia?.data?.attributes?.url}
-                          width={400}
-                          height={250}
-                          placeholder="blur"
-                          alt="event"
-                        />
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
+          {checkBought && token && (
+            <div>
+              <h4 className="text-xl my-3 text-center mb-5 font-semibold">Ticket only assets</h4>
+              {checkBought &&
+                token &&
+                eventData?.imageEventAssets?.map((item) => {
+                  return (
+                    <div key={item?.id}>
+                      {!item?.isPublic && (
+                        <div className="my-2">
+                          <Image
+                            src={item?.imageEventMedia?.data?.attributes?.url}
+                            blurDataURL={item?.imageEventMedia?.data?.attributes?.url}
+                            width={400}
+                            height={250}
+                            placeholder="blur"
+                            alt="event"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
 
-            {checkBought &&
-              token &&
-              eventData?.videoEventAssets?.map((item) => {
-                return (
-                  <div key={item?.id}>
-                    {!item?.isPublic && (
-                      <div className="my-2">
-                        <video controls loop width={400} height={250}>
-                          <source src={item?.videoEventMedia?.data?.attributes?.url} type="video/mp4" />
-                        </video>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-          </div>
+              {checkBought &&
+                token &&
+                eventData?.videoEventAssets?.map((item) => {
+                  return (
+                    <div key={item?.id}>
+                      {!item?.isPublic && (
+                        <div className="my-2">
+                          <video controls loop width={400} height={250}>
+                            <source src={item?.videoEventMedia?.data?.attributes?.url} type="video/mp4" />
+                          </video>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+            </div>
+          )}
         </div>
       </div>
 
