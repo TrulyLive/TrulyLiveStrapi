@@ -9,6 +9,7 @@ import cookie from 'cookie'
 import { toast } from 'react-toastify'
 import moment from 'moment'
 import ReactMarkdown from 'react-markdown'
+import { BiArrowBack } from 'react-icons/bi'
 
 const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, eventId }) => {
   const router = useRouter()
@@ -84,6 +85,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
           alt="event"
         />
         <p className="my-3 text-gray-700 text-sm">{eventData?.eventType}</p>
+        <div className="my-5 text-gray-800">{eventData?.eventBlurb}</div>
         <div className="my-3">
           <ReactMarkdown>{eventData?.eventDescription}</ReactMarkdown>
         </div>
@@ -158,6 +160,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
                         placeholder="blur"
                         alt="event"
                       />
+                      <p className="my-5 text-gray-700">{item?.description}</p>
                     </div>
                   )}
                 </div>
@@ -172,6 +175,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
                       <video controls loop width={400} height={250}>
                         <source src={item?.videoEventMedia?.data?.attributes?.url} type="video/mp4" />
                       </video>
+                      <p className="my-5 text-gray-700">{item?.description}</p>
                     </div>
                   )}
                 </div>
@@ -196,6 +200,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
                             placeholder="blur"
                             alt="event"
                           />
+                          <p className="my-5 text-gray-700">{item?.description}</p>
                         </div>
                       )}
                     </div>
@@ -212,6 +217,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
                           <video controls loop width={400} height={250}>
                             <source src={item?.videoEventMedia?.data?.attributes?.url} type="video/mp4" />
                           </video>
+                          <p className="my-5 text-gray-700">{item?.description}</p>
                         </div>
                       )}
                     </div>
@@ -220,6 +226,12 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
             </div>
           )}
         </div>
+        <Link href="/events">
+          <button className="mt-5 bg-[#222222] text-white py-1 px-2 rounded-md outline-none flex items-center gap-4">
+            <BiArrowBack />
+            <span>See all events</span>
+          </button>
+        </Link>
       </div>
 
       <Footer footerData={footerData} />
