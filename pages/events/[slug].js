@@ -10,6 +10,7 @@ import { toast } from 'react-toastify'
 import moment from 'moment'
 import ReactMarkdown from 'react-markdown'
 import { BiArrowBack } from 'react-icons/bi'
+import rehypeRaw from 'rehype-raw'
 
 const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, eventId }) => {
   const router = useRouter()
@@ -73,7 +74,15 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
       </Head>
       <Navbar navData={navData} />
       <div className="my-20 md:px-20 px-4 container">
-        <h1 className="mt-[8rem] text-xl md:text-3xl">{eventData?.eventName}</h1>
+        <div className="mt-[7rem]">
+          <Link href="/events">
+            <button className="mt-5 bg-[#222222] text-white py-1 px-2 rounded-md outline-none flex items-center gap-4">
+              <BiArrowBack />
+              <span>See all events</span>
+            </button>
+          </Link>
+        </div>
+        <h1 className="mt-3 text-xl md:text-3xl">{eventData?.eventName}</h1>
         <p className="my-3 text-gray-700 text-sm">{moment(eventData?.eventDateAndTime).format('dddd DD MMM hh:mm')}</p>
         <Image
           src={eventData?.eventImage?.data?.attributes?.url}
@@ -87,7 +96,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
         <p className="my-3 text-gray-700 text-sm">{eventData?.eventType}</p>
         <div className="my-5 text-gray-800">{eventData?.eventBlurb}</div>
         <div className="my-3">
-          <ReactMarkdown>{eventData?.eventDescription}</ReactMarkdown>
+          <ReactMarkdown rehypePlugins={[rehypeRaw]}>{eventData?.eventDescription}</ReactMarkdown>
         </div>
         {eventData?.eventTicket?.map((item) => {
           return (
@@ -226,12 +235,6 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
             </div>
           )}
         </div>
-        <Link href="/events">
-          <button className="mt-5 bg-[#222222] text-white py-1 px-2 rounded-md outline-none flex items-center gap-4">
-            <BiArrowBack />
-            <span>See all events</span>
-          </button>
-        </Link>
       </div>
 
       <Footer footerData={footerData} />
