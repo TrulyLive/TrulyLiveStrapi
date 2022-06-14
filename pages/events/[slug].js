@@ -15,6 +15,7 @@ import rehypeRaw from 'rehype-raw'
 const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, eventId }) => {
   const router = useRouter()
 
+
   const checkBought = profileData?.purchases?.find((item) => item?.event?.id === eventId)
 
   const profileTickets = profileData?.purchases
@@ -95,7 +96,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
         />
         <p className="my-3 text-gray-700 text-sm">{eventData?.eventType}</p>
         <div className="my-5 text-gray-800">{eventData?.eventBlurb}</div>
-        <div className="my-3">
+        <div className="my-3 mkd">
           <ReactMarkdown rehypePlugins={[rehypeRaw]}>{eventData?.eventDescription}</ReactMarkdown>
         </div>
         {eventData?.eventTicket?.map((item) => {

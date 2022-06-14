@@ -202,6 +202,15 @@ details[open] .faq-ans {
   border: 1px solid gray;
 }
 
+.mkd p{
+  margin: 0.5rem 0;
+}
+
+.mkd ul{
+  margin: 1rem 0;
+  list-style: disc;
+}
+
 @media (max-width: 768px) {
   .factbox {
     width: 100%;
