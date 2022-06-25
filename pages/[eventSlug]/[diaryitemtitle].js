@@ -40,7 +40,6 @@ export default function Video({ navData, footerData, profileData, token, videoDa
         poster={videoData[0]?.videoPoster?.data?.attributes?.url}
       />
       <Footer footerData={footerData} />
-      <Footer footerData={footerData} />
     </>
   )
 }
