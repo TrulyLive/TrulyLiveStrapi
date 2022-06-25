@@ -10,6 +10,7 @@ const AuthState = ({ children }) => {
   const [error, setError] = useState(null)
 
   const router = useRouter()
+  const localRoute = typeof window !== 'undefined' && localStorage.getItem('route')
 
   // Register user
   const register = async (user) => {
@@ -31,7 +32,7 @@ const AuthState = ({ children }) => {
         cookie.set('token', data.jwt, {
           expires: 5
         })
-        router.push('/onboarding')
+        localRoute ? router.push(`/events/${localRoute}`) : router.push('/onboarding')
       } else {
         setError(data.error.message)
       }
@@ -60,7 +61,7 @@ const AuthState = ({ children }) => {
         cookie.set('token', data.jwt, {
           expires: 5
         })
-        router.push('/onboarding')
+        localRoute ? router.push(`/events/${localRoute}`) : router.push('/onboarding')
       } else {
         setError(data.error.message)
       }

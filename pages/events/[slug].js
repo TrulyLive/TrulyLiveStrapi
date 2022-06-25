@@ -21,7 +21,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
     ?.filter((item) => item?.event?.id === eventId)
     ?.map((item) => item?.eventticket)
     ?.flat()
-  const profileArrTickets = profileTickets.map((item) => {
+  const profileArrTickets = profileTickets?.map((item) => {
     return item.eventTicketType
   })
   const allTickets = eventData?.eventTicket
@@ -70,7 +70,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
   }
 
   const filterBasedOnTicket = (arrOfObj) => {
-    return arrOfObj.filter((item) => profileTickets.some((ticket) => ticket?.eventTicketType === item?.ticketLevel))
+    return arrOfObj.filter((item) => profileTickets?.some((ticket) => ticket?.eventTicketType === item?.ticketLevel))
   }
 
   const imageAssets = filterBasedOnTicket(eventData?.imageEventAssets)
@@ -152,7 +152,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
 
         {profileTickets?.length >= 1 && notBoughtTickets && (
           <div className="my-5">
-            {notBoughtTickets.map((item) => {
+            {notBoughtTickets?.map((item) => {
               return (
                 <button
                   key={item?.id}
@@ -173,7 +173,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
               <p className="font-semibold">{moment(item?.dateAndTime).format('dddd DD MMM hh:mm')}</p>
               <div className="flex items-center gap-3">
                 <p className="my-2 text-gray-700">{item?.title}</p>
-                {profileArrTickets.includes(item?.ticketLevel) ? (
+                {profileArrTickets?.includes(item?.ticketLevel) ? (
                   <Link href={`/${eventData?.eventSlug}/${item?.title}`}>
                     <a className="bg-green-500 text-white p-1 my-2 rounded-md">Access</a>
                   </Link>
@@ -188,29 +188,32 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
           )
         })}
 
-        <h4 className="text-xl my-3 mb-5 font-semibold">Documents</h4>
-        {documentAssets?.map((item) => {
-          return (
-            <div key={item?.id} className="my-3">
-              <h1>{item?.title}</h1>
-              {item?.image && (
-                <div className="my-2">
-                  <Image
-                    src={item?.image?.data?.attributes?.url}
-                    blurDataURL={item?.image?.data?.attributes?.url}
-                    width={400}
-                    height={250}
-                    placeholder="blur"
-                    alt="event"
-                  />
+        {checkBought && token && (
+          <>
+            <h4 className="text-xl my-3 mb-5 font-semibold">Documents</h4>
+            {documentAssets?.map((item) => {
+              return (
+                <div key={item?.id} className="my-3">
+                  <h1>{item?.title}</h1>
+                  {item?.image && (
+                    <div className="my-2">
+                      <Image
+                        src={item?.image?.data?.attributes?.url}
+                        blurDataURL={item?.image?.data?.attributes?.url}
+                        width={400}
+                        height={250}
+                        placeholder="blur"
+                        alt="event"
+                      />
+                    </div>
+                  )}
+                  <ReactMarkdown rehypePlugins={[rehypeRaw]}>{item?.content}</ReactMarkdown>
                 </div>
-              )}
-              <ReactMarkdown rehypePlugins={[rehypeRaw]}>{item?.content}</ReactMarkdown>
-            </div>
-          )
-        })}
-        <hr className="mt-5" />
-
+              )
+            })}
+            <hr className="mt-5" />
+          </>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 place-items-center">
           <div>
             <h4 className="text-xl my-3 text-center mb-5 font-semibold">Public assets</h4>
