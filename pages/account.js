@@ -95,8 +95,8 @@ const AccountPage = ({ navData, footerData, profileData, token }) => {
       </Head>
       <Navbar navData={navData} />
       <div className="my-20 md:px-20 px-4 container">
+        <h1 className="text-center text-2xl font-semibold">User Profile</h1>
         <form onSubmit={handleProfileEdit}>
-          <h1 className="text-center text-2xl font-semibold">User Profile</h1>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-5 items-center my-10">
             <p className="md:text-xl">Profile Picture</p>
             {imgLoading ? (
@@ -156,6 +156,18 @@ const AccountPage = ({ navData, footerData, profileData, token }) => {
             )}
           </div>
         </form>
+        <div className="mt-10">
+          <h1 className="my-5 font-semibold text-2xl">My Tickets</h1>
+          {profileData?.purchases?.map((purchase) => {
+            return (
+              <div className="bg-white border-2 p-2 rounded-md my-5 md:w-2/4" key={purchase.id}>
+                <h1 className="text-xl">{purchase?.event?.eventName}</h1>
+                <p className="my-2">{purchase?.event?.eventBlurb}</p>
+                <p className="my-2">Level : {purchase?.eventticket[0]?.eventTicketType}</p>
+              </div>
+            )
+          })}
+        </div>
       </div>
       <Footer footerData={footerData} />
     </>

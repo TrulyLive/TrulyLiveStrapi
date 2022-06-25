@@ -47,11 +47,11 @@ video {
   object-fit: cover;
 }
 
-input,
+/* input,
 select {
   outline: none;
   border: none;
-}
+} */
 
 input[type='search']::-ms-clear {
   display: none;

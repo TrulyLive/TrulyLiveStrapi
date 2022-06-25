@@ -38,7 +38,7 @@ function Navbar({ navData }) {
           {navData.navlink.map((link) => (
             <li key={link.id}>
               <Link href={`/#${formatLink(link.navlink)}`}>
-                <a onClick={() => setOpen(false)} className="text-scGray7 hover:text-pmRed1 font-light">
+                <a onClick={() => setOpen(false)} className="text-gray-300 hover:text-pmRed1 font-light">
                   {link.navlink}
                 </a>
               </Link>
@@ -46,7 +46,7 @@ function Navbar({ navData }) {
           ))}
           <li>
             <Link href="/events">
-              <a onClick={() => setOpen(false)} className="text-scGray7 hover:text-pmRed1 font-light">
+              <a onClick={() => setOpen(false)} className="text-gray-300 hover:text-pmRed1 font-light">
                 Events
               </a>
             </Link>
@@ -55,7 +55,7 @@ function Navbar({ navData }) {
             <>
               <li>
                 <Link href="/login">
-                  <a onClick={() => setOpen(false)} className="text-scGray7 hover:text-pmRed1 font-light">
+                  <a onClick={() => setOpen(false)} className="text-gray-300 hover:text-pmRed1 font-light">
                     Login
                   </a>
                 </Link>
@@ -65,21 +65,16 @@ function Navbar({ navData }) {
             <>
               <li>
                 <Link href="/account">
-                  <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Account</li>
+                  <a className="text-gray-300 hover:text-pmRed1 font-light cursor-pointer">Account</a>
                 </Link>
               </li>
               <li>
                 <Link href="/watching">
-                  <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Watching</li>
-                </Link>
-              </li>
-              <li>
-                <Link href="/video">
-                  <li className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer">Watch a show</li>
+                  <a className="text-gray-300 hover:text-pmRed1 font-light cursor-pointer">Watching</a>
                 </Link>
               </li>
               <li
-                className="text-scGray7 hover:text-pmRed1 font-light cursor-pointer"
+                className="text-gray-300 hover:text-pmRed1 font-light cursor-pointer"
                 onClick={() => {
                   cookie.remove('token')
                   router.push('/')
