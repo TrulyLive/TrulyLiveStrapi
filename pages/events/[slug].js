@@ -98,7 +98,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
           </Link>
         </div>
         <h1 className="mt-3 text-xl md:text-3xl">{eventData?.eventName}</h1>
-        <p className="my-3 text-gray-700 text-sm">{moment(eventData?.eventDateAndTime).format('dddd DD MMM hh:mm')}</p>
+        <p className="my-3 text-gray-700 text-sm">{moment(eventData?.eventDateAndTime).format('dddd DD MMM HH:mm')}</p>
         <Image
           src={eventData?.eventImage?.data?.attributes?.url}
           blurDataURL={eventData?.eventImage?.data?.attributes?.url}
@@ -113,13 +113,44 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
         <div className="my-3 mkd">
           <ReactMarkdown rehypePlugins={[rehypeRaw]}>{eventData?.eventDescription}</ReactMarkdown>
         </div>
-        {eventData?.eventTicket?.map((item) => {
+        {eventData?.eventDiary.length >= 1 && <h4 className="text-xl my-3 mb-5 font-semibold">Event Diary</h4>}
+        {eventData?.eventDiary?.map((item) => {
           return (
-            <p className="my-1" key={item?.id}>
-              {item?.eventTicketType} · {item?.price}$
-            </p>
+            <div className="my-3" key={item.id}>
+              <p className="font-semibold">{moment(item?.dateAndTime).format('dddd DD MMM HH:mm')}</p>
+              <div className="flex items-center gap-3">
+                <p className="my-2 text-gray-700">{item?.title}</p>
+                {profileArrTickets?.includes(item?.ticketLevel) ? (
+                  <Link href={`/${eventData?.eventSlug}/${item?.title}`}>
+                    <a className="bg-green-500 text-white p-1 my-2 rounded-md">Access</a>
+                  </Link>
+                ) : (
+                  <div className="flex items-center">
+                    <button disabled className="bg-red-700 text-white p-[0.15rem] my-2 rounded-md">
+                      {`Access - restricted (${item?.ticketLevel} ticket required)`}
+                    </button>
+                    <button
+                      className="bg-[#222222] text-white py-1 px-2 rounded-md outline-none mr-2"
+                      onClick={() => handleBuy(item?.ticketLevel, 300)}
+                    >
+                      Buy {item?.ticketLevel} ticket
+                    </button>
+                  </div>
+                )}
+              </div>
+              <p>{item?.description}</p>
+            </div>
           )
         })}
+        <div className="mt-5">
+          {eventData?.eventTicket?.map((item) => {
+            return (
+              <p className="my-1" key={item?.id}>
+                {item?.eventTicketType} · £{item?.price}
+              </p>
+            )
+          })}
+        </div>
 
         {!token && (
           <div className="my-5">
@@ -166,31 +197,9 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
           </div>
         )}
 
-        <h4 className="text-xl my-3 mb-5 font-semibold">Event Dairy</h4>
-        {eventData?.eventDiary?.map((item) => {
-          return (
-            <div className="my-3" key={item.id}>
-              <p className="font-semibold">{moment(item?.dateAndTime).format('dddd DD MMM hh:mm')}</p>
-              <div className="flex items-center gap-3">
-                <p className="my-2 text-gray-700">{item?.title}</p>
-                {profileArrTickets?.includes(item?.ticketLevel) ? (
-                  <Link href={`/${eventData?.eventSlug}/${item?.title}`}>
-                    <a className="bg-green-500 text-white p-1 my-2 rounded-md">Access</a>
-                  </Link>
-                ) : (
-                  <button disabled className="bg-red-700 text-white p-[0.15rem] my-2 rounded-md">
-                    {`Access - restricted (${item?.ticketLevel} ticket required)`}
-                  </button>
-                )}
-              </div>
-              <p>{item?.description}</p>
-            </div>
-          )
-        })}
-
         {checkBought && token && (
           <>
-            <h4 className="text-xl my-3 mb-5 font-semibold">Documents</h4>
+            {documentAssets?.length >= 1 && <h4 className="text-xl my-3 mb-5 font-semibold">Documents</h4>}
             {documentAssets?.map((item) => {
               return (
                 <div key={item?.id} className="my-3">
@@ -216,7 +225,9 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 place-items-center">
           <div>
-            <h4 className="text-xl my-3 text-center mb-5 font-semibold">Public assets</h4>
+            {eventData?.imageEventAssets?.length >= 1 && (
+              <h4 className="text-xl my-3 text-center mb-5 font-semibold">Public assets</h4>
+            )}
             {eventData?.imageEventAssets?.map((item) => {
               return (
                 <div key={item?.id}>
@@ -254,7 +265,9 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
           </div>
           {checkBought && token && (
             <div>
-              <h4 className="text-xl my-3 text-center mb-5 font-semibold">Ticket only assets</h4>
+              {imageAssets?.length >= 1 && (
+                <h4 className="text-xl my-3 text-center mb-5 font-semibold">Ticket only assets</h4>
+              )}
               {checkBought &&
                 token &&
                 imageAssets?.map((item) => {
