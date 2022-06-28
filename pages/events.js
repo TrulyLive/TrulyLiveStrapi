@@ -5,7 +5,6 @@ import Head from 'next/head'
 import Events from '../components/Events'
 
 const OnBoardingPage = ({ navData, footerData, eventData }) => {
-  
   return (
     <>
       <Head>

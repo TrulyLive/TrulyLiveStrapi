@@ -10,7 +10,6 @@ import Contact from '../components/Contact'
 import Musicians from '../components/Musicians'
 import FAQ from '../components/FAQ'
 import LiveShow from '../components/LiveShow'
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Home({ navData, homeData, footerData }) {
   return (

@@ -55,7 +55,7 @@ const OnBoardingPage = ({ navData, footerData, profileData, token }) => {
       if (res.ok) {
         setLoading(false)
         toast.success('Profile updated successfully')
-        router.push('/video')
+        router.push('/account')
       }
     } catch (err) {
       alert(err)
@@ -88,13 +88,13 @@ const OnBoardingPage = ({ navData, footerData, profileData, token }) => {
   return (
     <>
       <Head>
-        <title>Truly Live | Onboarding</title>
+        <title>Truly Live | Set up your account</title>
         <meta name="description" content="Truly Live - 100% Live by definition" />
       </Head>
       <Navbar navData={navData} />
       <div className="my-20 md:px-20 px-4 container">
         <form onSubmit={handleProfileEdit}>
-          <h1 className="text-center text-2xl font-semibold">Onboarding</h1>
+          <h1 className="text-center text-2xl font-semibold">Set up your account</h1>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-5 items-center my-10">
             <p className="md:text-xl">Profile Picture</p>
             {imgLoading ? (
@@ -183,7 +183,7 @@ export const getServerSideProps = async ({ req }) => {
   if (data?.onBoarded) {
     return {
       redirect: {
-        destination: '/video',
+        destination: '/account',
         permanent: false
       }
     }

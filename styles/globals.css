@@ -16,7 +16,7 @@ body {
 
 a {
   color: unset;
-  text-decoration: none !important;
+  text-decoration: none;
   cursor: pointer;
   width: unset;
 }
@@ -47,11 +47,11 @@ video {
   object-fit: cover;
 }
 
-input,
+/* input,
 select {
   outline: none;
   border: none;
-}
+} */
 
 input[type='search']::-ms-clear {
   display: none;
@@ -198,188 +198,19 @@ details[open] .faq-ans {
   color: #ee1f26;
 }
 
-.my-in-clr {
+.my-in-clr{
   border: 1px solid gray;
 }
 
-.mkd p {
+.mkd p{
   margin: 0.5rem 0;
 }
 
-.mkd ul {
+.mkd ul{
   margin: 1rem 0;
   list-style: disc;
 }
-/* video stream comment */
-.row {
-  margin-right: 0 !important;
-  margin-left: 0 !important;
-}
-.position-relative {
-  position: relative !important;
-}
-#streamRow {
-  overflow: hidden;
-  height: 700px;
-  background-color: rgba(0, 0, 0, 0.8);
-}
-.video-left-div {
-  width: calc(100%) !important;
-  height: 700px;
-  padding: 0 !important;
-  position: relative;
-  z-index: 20;
-}
-.video-left-div.hide {
-  transition: 0.4s all ease;
-}
-.video-left-div.close {
-  width: calc(100% - 350px) !important;
-  height: 700px;
-  padding: 0 !important;
-  position: relative;
-  transition: 0.4s all ease;
-}
-.video-left-div video {
-  max-height: 100% !important;
-  object-fit: fill;
-}
-/* comments */
-.comments-div.close {
-  /* right: -360px; */
-  transition: 0.5s all ease;
-  z-index: -1;
-}
-.comments-div {
-  background-color: rgba(0, 0, 0, 0.8);
-  position: absolute;
-  height: 700px;
-  width: 350px !important;
-  padding: 10px;
-  right: 0;
-  z-index: 1;
 
-  /* transition: 0.5s all ease; */
-}
-.comments-div .comment-top {
-  height: 70px;
-}
-.comments-div .comment-top .title {
-  color: gainsboro;
-  font-size: 20px;
-}
-.comments-div .comment-bottom {
-  height: calc(100% - 70px);
-  padding: 0;
-}
-.comments-div .comment-bottom .users-comments {
-  height: calc(500px);
-  overflow-y: auto;
-}
-.comments-div .comment-bottom .comment-section {
-  height: 60px !important;
-  border-top: 1px solid #737a7a;
-  display: flex;
-  padding: 10px;
-}
-/* comment list design */
-.comment-row {
-  width: 100%;
-  display: flex;
-  padding: 0 10px 10px 0;
-}
-.comment-row .comment-left {
-  width: 60px;
-  text-align: center;
-}
-.comment-row .comment-left img {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-}
-.comment-row .comment-right {
-  background-color: rgba(0, 0, 0, 1);
-  width: 100%;
-  min-height: 30px;
-  border-radius: 10px;
-  box-shadow: 2px 2px 5px 2px #3a3d3d;
-  color: white;
-  padding: 10px;
-}
-.comment-row .comment-right p {
-  margin: 0;
-  text-align: left;
-}
-.comment-row .comment-right .comment-time {
-  width: 100%;
-  text-align: right;
-  font-size: 12px;
-  padding: 5px;
-  color: gainsboro;
-}
-.comment-button {
-  position: absolute;
-  bottom: 80px;
-  right: 20px;
-  height: 50px;
-  width: 50px;
-  border-radius: 50% !important;
-  z-index: 99;
-}
-/* comment scroll design */
-#usersComments::-webkit-scrollbar {
-  width: 5px !important;
-}
-/* Track */
-#usersComments::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-/* Handle */
-#usersComments::-webkit-scrollbar-thumb {
-  background: #888;
-}
-
-/* Handle on hover */
-#usersComments::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-/* emoji box */
-
-.react-emoji-picker--wrapper {
-  z-index: 1000 !important;
-  overflow: visible !important;
-  width: 305px !important;
-}
-/* end */
-@media screen and (min-width: 993px) and (max-width: 1245px) {
-  .video-left-div video {
-    height: 700px !important;
-  }
-}
-@media screen and (min-width: 0) and (max-width: 992px) {
-  #streamRow {
-    display: block;
-    height: auto !important;
-  }
-  .video-left-div.false {
-    height: 350px !important;
-  }
-  .video-left-div.close {
-    height: 350px;
-    min-width: 100%;
-  }
-  .video-left-div video {
-    min-height: 350px !important;
-  }
-  .comments-div {
-    height: 450px;
-    width: 100% !important;
-  }
-  .comments-div .users-comments {
-    height: 300px !important;
-  }
-}
 @media (max-width: 768px) {
   .factbox {
     width: 100%;
