@@ -15,15 +15,13 @@ import rehypeRaw from 'rehype-raw'
 const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, eventId }) => {
   const router = useRouter()
 
+
   const checkBought = profileData?.purchases?.find((item) => item?.event?.id === eventId)
 
   const profileTickets = profileData?.purchases
     ?.filter((item) => item?.event?.id === eventId)
     ?.map((item) => item?.eventticket)
     ?.flat()
-  const profileArrTickets = profileTickets?.map((item) => {
-    return item.eventTicketType
-  })
   const allTickets = eventData?.eventTicket
 
   const notBoughtTickets = allTickets.filter(
@@ -68,18 +66,6 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
       console.log(err)
     }
   }
-
-  const filterBasedOnTicket = (arrOfObj) => {
-    return arrOfObj.filter((item) => profileTickets?.some((ticket) => ticket?.eventTicketType === item?.ticketLevel))
-  }
-
-  const imageAssets = filterBasedOnTicket(eventData?.imageEventAssets)
-  const videoAssets = filterBasedOnTicket(eventData?.videoEventAssets)
-  const documentAssets = filterBasedOnTicket(eventData?.document)
-
-  // const allowedToSee = eventData?.eventDiary.filter((item) =>
-  //   profileTickets.some((ticket) => ticket?.eventTicketType === item?.ticketLevel)
-  // )
 
   return (
     <>
@@ -152,7 +138,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
 
         {profileTickets?.length >= 1 && notBoughtTickets && (
           <div className="my-5">
-            {notBoughtTickets?.map((item) => {
+            {notBoughtTickets.map((item) => {
               return (
                 <button
                   key={item?.id}
@@ -166,54 +152,8 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
           </div>
         )}
 
-        <h4 className="text-xl my-3 mb-5 font-semibold">Event Dairy</h4>
-        {eventData?.eventDiary?.map((item) => {
-          return (
-            <div className="my-3" key={item.id}>
-              <p className="font-semibold">{moment(item?.dateAndTime).format('dddd DD MMM hh:mm')}</p>
-              <div className="flex items-center gap-3">
-                <p className="my-2 text-gray-700">{item?.title}</p>
-                {profileArrTickets?.includes(item?.ticketLevel) ? (
-                  <Link href={`/${eventData?.eventSlug}/${item?.title}`}>
-                    <a className="bg-green-500 text-white p-1 my-2 rounded-md">Access</a>
-                  </Link>
-                ) : (
-                  <button disabled className="bg-red-700 text-white p-[0.15rem] my-2 rounded-md">
-                    {`Access - restricted (${item?.ticketLevel} ticket required)`}
-                  </button>
-                )}
-              </div>
-              <p>{item?.description}</p>
-            </div>
-          )
-        })}
+        <hr />
 
-        {checkBought && token && (
-          <>
-            <h4 className="text-xl my-3 mb-5 font-semibold">Documents</h4>
-            {documentAssets?.map((item) => {
-              return (
-                <div key={item?.id} className="my-3">
-                  <h1>{item?.title}</h1>
-                  {item?.image && (
-                    <div className="my-2">
-                      <Image
-                        src={item?.image?.data?.attributes?.url}
-                        blurDataURL={item?.image?.data?.attributes?.url}
-                        width={400}
-                        height={250}
-                        placeholder="blur"
-                        alt="event"
-                      />
-                    </div>
-                  )}
-                  <ReactMarkdown rehypePlugins={[rehypeRaw]}>{item?.content}</ReactMarkdown>
-                </div>
-              )
-            })}
-            <hr className="mt-5" />
-          </>
-        )}
         <div className="grid grid-cols-1 md:grid-cols-2 place-items-center">
           <div>
             <h4 className="text-xl my-3 text-center mb-5 font-semibold">Public assets</h4>
@@ -257,7 +197,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
               <h4 className="text-xl my-3 text-center mb-5 font-semibold">Ticket only assets</h4>
               {checkBought &&
                 token &&
-                imageAssets?.map((item) => {
+                eventData?.imageEventAssets?.map((item) => {
                   return (
                     <div key={item?.id}>
                       {!item?.isPublic && (
@@ -279,7 +219,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
 
               {checkBought &&
                 token &&
-                videoAssets?.map((item) => {
+                eventData?.videoEventAssets?.map((item) => {
                   return (
                     <div key={item?.id}>
                       {!item?.isPublic && (
@@ -312,7 +252,7 @@ export const getServerSideProps = async ({ req, query: { slug } }) => {
   const footerData = await footerRes.json()
 
   const eventRes = await fetch(
-    `${baseUrl}/events?populate[0]=eventImage,imageEventAssets.imageEventMedia,videoEventAssets.videoEventMedia,eventTicket,document.image,eventDiary&filters[eventSlug][$eq]=${slug}`
+    `${baseUrl}/events?populate[0]=eventImage,imageEventAssets.imageEventMedia,videoEventAssets.videoEventMedia,eventTicket&filters[eventSlug][$eq]=${slug}`
   )
   const eventData = await eventRes.json()
 
