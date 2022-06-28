@@ -55,7 +55,7 @@ const OnBoardingPage = ({ navData, footerData, profileData, token }) => {
       if (res.ok) {
         setLoading(false)
         toast.success('Profile updated successfully')
-        router.push('/video')
+        router.push('/account')
       }
     } catch (err) {
       alert(err)
@@ -183,7 +183,7 @@ export const getServerSideProps = async ({ req }) => {
   if (data?.onBoarded) {
     return {
       redirect: {
-        destination: '/video',
+        destination: '/account',
         permanent: false
       }
     }
