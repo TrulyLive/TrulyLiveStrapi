@@ -61,7 +61,7 @@ export const getServerSideProps = async ({ req, query }) => {
     }
   }
   const videoRes = await fetch(
-    `${baseUrl}/events?populate[0]=eventDiary.videoPoster&filters[eventDiary][title][$eq]=${query.diaryitemtitle}`
+    `${baseUrl}/events?populate[0]=eventDiary.videoPoster&filters[eventDiary][id][$eq]=${query.diaryitemtitle}`
   )
   const videoData = await videoRes.json()
 
@@ -77,7 +77,9 @@ export const getServerSideProps = async ({ req, query }) => {
     ?.map((item) => item?.eventticket)
     ?.flat()
 
-  const videoToShow = videoData.data[0].attributes?.eventDiary?.filter((item) => item?.title === query.diaryitemtitle)
+  const videoToShow = videoData.data[0].attributes?.eventDiary?.filter(
+    (item) => item?.id === parseInt(query.diaryitemtitle)
+  )
 
   const allowedToSee = videoToShow.filter((item) =>
     profileTickets.some((ticket) => ticket?.eventTicketType === item?.ticketLevel)

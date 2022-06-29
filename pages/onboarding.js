@@ -81,7 +81,7 @@ const OnBoardingPage = ({ navData, footerData, profileData, token }) => {
     if (image && number) {
       updateProile(image, number, mailBox)
     } else {
-      toast.error('Please fill everything out')
+      toast.error('Please complete missing information')
     }
   }
 

@@ -73,13 +73,21 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
     return arrOfObj.filter((item) => profileTickets?.some((ticket) => ticket?.eventTicketType === item?.ticketLevel))
   }
 
+  const filterBasedOnPublic = (arrOfObj) => {
+    return arrOfObj.filter((item) => item?.isPublic === true)
+  }
+
   const imageAssets = filterBasedOnTicket(eventData?.imageEventAssets)
+  const publicImageAssets = filterBasedOnPublic(eventData?.imageEventAssets)
   const videoAssets = filterBasedOnTicket(eventData?.videoEventAssets)
   const documentAssets = filterBasedOnTicket(eventData?.document)
+  const publicDocumentAssets = filterBasedOnPublic(eventData?.document)
 
   // const allowedToSee = eventData?.eventDiary.filter((item) =>
   //   profileTickets.some((ticket) => ticket?.eventTicketType === item?.ticketLevel)
   // )
+
+  const documentsLength = publicDocumentAssets?.length >= 1 || documentAssets?.length >= 1
 
   return (
     <>
@@ -121,20 +129,33 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
               <div className="flex items-center gap-3">
                 <p className="my-2 text-gray-700">{item?.title}</p>
                 {profileArrTickets?.includes(item?.ticketLevel) ? (
-                  <Link href={`/${eventData?.eventSlug}/${item?.title}`}>
-                    <a className="bg-green-500 text-white p-1 my-2 rounded-md">Access</a>
+                  <Link href={`/${eventData?.eventSlug}/${item?.id}`}>
+                    <a className="bg-green-500 text-white p-1 my-2 rounded-md">Watch Now</a>
                   </Link>
                 ) : (
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-2">
                     <button disabled className="bg-red-700 text-white p-[0.15rem] my-2 rounded-md">
                       {`Access - restricted (${item?.ticketLevel} ticket required)`}
                     </button>
-                    <button
-                      className="bg-[#222222] text-white py-1 px-2 rounded-md outline-none mr-2"
-                      onClick={() => handleBuy(item?.ticketLevel, 300)}
-                    >
-                      Buy {item?.ticketLevel} ticket
-                    </button>
+                    {!token ? (
+                      <Link href="/login">
+                        <a
+                          className="bg-[#222222] text-white py-1 px-2 rounded-md outline-none"
+                          onClick={() =>
+                            typeof window !== 'undefined' && localStorage.setItem('route', eventData?.eventSlug)
+                          }
+                        >
+                          Log in to buy
+                        </a>
+                      </Link>
+                    ) : (
+                      <button
+                        className="bg-[#222222] text-white py-1 px-2 rounded-md outline-none mr-2"
+                        onClick={() => handleBuy(item?.ticketLevel, 300)}
+                      >
+                        Buy {item?.ticketLevel} ticket
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -142,9 +163,14 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
             </div>
           )
         })}
+        <h4 className="text-xl my-3 mb-5 font-semibold">Ticket Pricing</h4>
         <div className="mt-5">
           {eventData?.eventTicket?.map((item) => {
-            return (
+            return profileArrTickets?.includes(item?.eventTicketType) ? (
+              <p className="my-1" key={item?.id}>
+                {item?.eventTicketType} · £{item?.price} <span className="font-semibold">(Purchased)</span>
+              </p>
+            ) : (
               <p className="my-1" key={item?.id}>
                 {item?.eventTicketType} · £{item?.price}
               </p>
@@ -197,41 +223,57 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
           </div>
         )}
 
-        {checkBought && token && (
-          <>
-            {documentAssets?.length >= 1 && <h4 className="text-xl my-3 mb-5 font-semibold">Documents</h4>}
-            {documentAssets?.map((item) => {
-              return (
-                <div key={item?.id} className="my-3">
-                  <h1>{item?.title}</h1>
-                  {item?.image && (
-                    <div className="my-2">
-                      <Image
-                        src={item?.image?.data?.attributes?.url}
-                        blurDataURL={item?.image?.data?.attributes?.url}
-                        width={400}
-                        height={250}
-                        placeholder="blur"
-                        alt="event"
-                      />
-                    </div>
-                  )}
-                  <ReactMarkdown rehypePlugins={[rehypeRaw]}>{item?.content}</ReactMarkdown>
+        {documentsLength && <h4 className="text-xl my-3 mb-5 font-semibold">Documents</h4>}
+        {documentAssets?.map((item) => {
+          return (
+            <div key={item?.id} className="my-3">
+              <h1>{item?.title}</h1>
+              {item?.image?.data && (
+                <div className="my-2">
+                  <Image
+                    src={item?.image?.data?.attributes?.url}
+                    blurDataURL={item?.image?.data?.attributes?.url}
+                    width={400}
+                    height={250}
+                    placeholder="blur"
+                    alt="event"
+                  />
                 </div>
-              )
-            })}
-            <hr className="mt-5" />
-          </>
-        )}
+              )}
+              <ReactMarkdown rehypePlugins={[rehypeRaw]}>{item?.content}</ReactMarkdown>
+            </div>
+          )
+        })}
+        {publicDocumentAssets?.map((item) => {
+          return (
+            <div key={item?.id} className="my-3">
+              <h1>{item?.title}</h1>
+              {item?.image?.data && (
+                <div className="my-2">
+                  <Image
+                    src={item?.image?.data?.attributes?.url}
+                    blurDataURL={item?.image?.data?.attributes?.url}
+                    width={400}
+                    height={250}
+                    placeholder="blur"
+                    alt="event"
+                  />
+                </div>
+              )}
+              <ReactMarkdown rehypePlugins={[rehypeRaw]}>{item?.content}</ReactMarkdown>
+            </div>
+          )
+        })}
+        <hr className="mt-5" />
         <div className="grid grid-cols-1 md:grid-cols-2 place-items-center">
           <div>
-            {eventData?.imageEventAssets?.length >= 1 && (
+            {publicImageAssets?.length >= 1 && (
               <h4 className="text-xl my-3 text-center mb-5 font-semibold">Public assets</h4>
             )}
             {eventData?.imageEventAssets?.map((item) => {
               return (
                 <div key={item?.id}>
-                  {item?.isPublic && (
+                  {item?.isPublic && item?.imageEventMedia?.data && (
                     <div className="my-2">
                       <Image
                         src={item?.imageEventMedia?.data?.attributes?.url}
@@ -273,7 +315,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
                 imageAssets?.map((item) => {
                   return (
                     <div key={item?.id}>
-                      {!item?.isPublic && (
+                      {!item?.isPublic && item?.imageEventMedia?.data && (
                         <div className="my-2">
                           <Image
                             src={item?.imageEventMedia?.data?.attributes?.url}
