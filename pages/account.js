@@ -9,6 +9,7 @@ import { FiEdit } from 'react-icons/fi'
 import { useRouter } from 'next/router'
 import Spinner from '../components/Spinner'
 import { toast } from 'react-toastify'
+import Link from 'next/link'
 
 const AccountPage = ({ navData, footerData, profileData, token }) => {
   const router = useRouter()
@@ -156,6 +157,23 @@ const AccountPage = ({ navData, footerData, profileData, token }) => {
             )}
           </div>
         </form>
+        <div className="mt-10">
+          <h1 className="my-5 font-semibold text-2xl">My Tickets</h1>
+          {profileData?.purchases?.map((purchase) => {
+            return (
+              purchase?.event && (
+                <div className="bg-white border-2 p-2 rounded-md my-5 md:w-2/4" key={purchase.id}>
+                  <h1 className="text-xl">{purchase?.event?.eventName}</h1>
+                  <p className="my-2">{purchase?.event?.eventBlurb}</p>
+                  <p className="my-2">Level : {purchase?.eventticket[0]?.eventTicketType}</p>
+                  <Link href={`/events/${purchase?.event?.eventSlug}`}>
+                    <button className="bg-green-500 text-white p-1 my-2 rounded-md">Access</button>
+                  </Link>
+                </div>
+              )
+            )
+          })}
+        </div>
       </div>
       <Footer footerData={footerData} />
     </>
