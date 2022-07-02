@@ -136,10 +136,7 @@ export default function Home({ navData, footerData, videoData, profileData, toke
         </div>
       </div>
       <Footer footerData={footerData} />
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
-      />
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js"
-      ></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     </>
   )
 }
