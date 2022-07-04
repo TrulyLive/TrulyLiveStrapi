@@ -7,16 +7,33 @@ import cookie from 'cookie'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Comments from '../components/comments'
 import InputEmoji from 'react-input-emoji'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
+import io from 'socket.io-client';
+//Chat server URL
+const ChatEndPoint = "http://localhost:5000/";
+//
 
 export default function Home({ navData, footerData, videoData, profileData, token, eventData }) {
+
   let router = useRouter();
   const [text, setText] = useState('')
   const [windowSize, setWindowSize] = useState(null);
   const [sideMenu, setSideMenu] = useState(false);
   const [windowWidth, setWindowWidth] = useState(0);
   const [hideDrop, setHideDrop] = useState(null);
+  const [currentUser, setCurrentUser] = useState({
+    Image: profileData && profileData.image.url,
+    Email: profileData.email
+  });
+  //Unique Room By URL path name
+  const UniqueRoomId = router.pathname;
+  //
+  //socket initial
+  const socket = io(ChatEndPoint, { transports: ["websocket", "polling", "flashsocket"], forceNew: true });
+  var selectedUserId = "";
+  const [chat, setChat] = useState([]);
 
+  //
   useEffect(() => {
     setWindowWidth([window.innerWidth])
     window.addEventListener("resize", changeWindowWidth);
@@ -25,12 +42,11 @@ export default function Home({ navData, footerData, videoData, profileData, toke
   useEffect(() => {
     triggerSideBar();
   }, [windowWidth]);
-  useEffect(() => {
-    console.log(router);
-    console.log(videoData);
-    console.log(eventData);
-  }, []);
-
+  // useEffect(() => {
+  //   console.log(router);
+  //   console.log(videoData);
+  //   console.log(eventData);
+  // }, []);
   const changeWindowWidth = () => {
     setWindowWidth([window.innerWidth]);
   }
@@ -42,9 +58,61 @@ export default function Home({ navData, footerData, videoData, profileData, toke
       setSideMenu(true);
     }
   }
+  const LoadData = () => {
+    socket.emit("loadAllComment", { OwnUnique: currentUser.Email, RoomId: UniqueRoomId })
+  }
+
+  useEffect(() => {
+    socket.on("loadData" + currentUser.Email, (data) => {
+      console.log(data);
+      var chatData = [];
+      data.forEach(element => {
+        chatData.push(element);
+      });
+      setChat(chatData);
+      scrollChatMiddle();
+    });
+    socket.on("rcvOwnMsg", (data) => {
+      console.log(data);
+      setChat((chat) => [...chat, data]);
+      scrollChatMiddle();
+    });
+    return function cleanup() {
+      socket.off('rcvOwnMsg');
+      socket.off('loadData' + currentUser.Email);
+    }
+  }, [])
   const scrollChatMiddle = () => {
     document.getElementById('usersComments').scrollTop = document.getElementById('usersComments').scrollHeight;
   }
+  const sendText = (data, e) => {
+    // document.getElementById('messageBox').value = '';
+    if (text.trim() !== '') {
+      if (e.keyCode === 13 && !e.shiftKey) {
+        if (data && data.trim() !== '') {
+          socket.emit("sendMessage", { Email: currentUser.Email, OwnPic: currentUser.Image, Message: data, RoomId: UniqueRoomId })
+        }
+        e.preventDefault();
+      }
+    } else {
+      if (e.keyCode === 13)
+        e.preventDefault();
+    }
+
+    scrollChatMiddle();
+  }
+  // const hitEnter = (e) => {
+  //   if (text.trim() !== '') {
+  //     if (e.keyCode === 13 && !e.shiftKey) {
+  //       document.getElementById('btnSend').click();
+  //       e.preventDefault();
+  //     }
+  //   } else {
+  //     if (e.keyCode === 13)
+  //       e.preventDefault();
+  //   }
+
+  // }
   useEffect(() => {
     const addToDB = async () => {
       try {
@@ -81,6 +149,7 @@ export default function Home({ navData, footerData, videoData, profileData, toke
     scrollChatMiddle();
     setSideMenu(!sideMenu);
     hideDrop === null ? setHideDrop(false) : setHideDrop(!hideDrop);
+    LoadData();
   }
   return (
     <>
@@ -117,7 +186,12 @@ export default function Home({ navData, footerData, videoData, profileData, toke
           </div>
           <div className="comment-bottom">
             <div id='usersComments' className="users-comments">
-              <Comments />
+
+              {
+                chat && chat.length > 0 && chat.map((item, key) => (
+                  <Comments chat={item} key={key} scrollChatMiddle={scrollChatMiddle} />
+                ))
+              }
             </div>
             <div className="comment-section">
               <div className="col-11">
@@ -126,10 +200,11 @@ export default function Home({ navData, footerData, videoData, profileData, toke
                   onChange={setText}
                   cleanOnEnter
                   placeholder="Type a message"
+                  onKeyDown={(e) => sendText(text, e)}
                 />
               </div>
               <div className="col-1 text-left">
-                <button className='btn ps-0 text-primary mt-2'><i className="fas fa-paper-plane fa-lg"></i></button>
+                <button className='btn ps-0 text-primary mt-2' onClick={() => sendText(text)}><i className="fas fa-paper-plane fa-lg"></i></button>
               </div>
             </div>
           </div>

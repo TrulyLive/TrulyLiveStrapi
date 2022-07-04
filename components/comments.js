@@ -1,6 +1,9 @@
-import { Fragment } from "react"
+import { Fragment, useEffect } from "react"
 
-const Comments = () => {
+const Comments = ({ chat, scrollChatMiddle }) => {
+    useEffect(() => {
+        scrollChatMiddle();
+    }, [chat])
     return (
         <Fragment>
             <div className="comment-row">
@@ -8,17 +11,8 @@ const Comments = () => {
                     <img src="/images/audience.png" alt="audience" />
                 </div>
                 <div className="comment-right">
-                    <p className="comments">Lorem Ipsum is simply dummy text.😍</p>
-                    <div className="comment-time">21/06/2022 01:35pm</div>
-                </div>
-            </div>
-            <div className="comment-row">
-                <div className="comment-left">
-                    <img src="/images/audience.png" alt="audience" />
-                </div>
-                <div className="comment-right">
-                    <p className="comments">😍</p>
-                    <div className="comment-time">21/06/2022 01:35pm</div>
+                    <p className="comments">{chat && chat.Message}</p>
+                    <div className="comment-time">{chat && chat.DateTime}</div>
                 </div>
             </div>
         </Fragment>

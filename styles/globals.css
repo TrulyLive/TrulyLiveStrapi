@@ -243,6 +243,7 @@ details[open] .faq-ans {
 .video-left-div video {
   max-height: 100% !important;
   object-fit: fill;
+  min-height: 700px;
 }
 /* comments */
 .comments-div.close {
