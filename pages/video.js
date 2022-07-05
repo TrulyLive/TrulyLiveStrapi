@@ -210,7 +210,7 @@ export default function Home({ navData, footerData, videoData, profileData, toke
           </div>
         </div>
       </div>
-      <Footer footerData={footerData} />
+      <Footer footerData={footerData} /> 
     </>
   )
 }
