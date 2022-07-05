@@ -24,7 +24,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
     ?.flat()
   const allTickets = eventData?.eventTicket
 
-  const notBoughtTickets = allTickets.filter(
+  const notBoughtTickets = allTickets?.filter(
     (x) => !profileTickets?.some((y) => x?.eventTicketType === y?.eventTicketType)
   )
 
@@ -68,11 +68,11 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
   }
 
   const filterBasedOnTicket = (arrOfObj) => {
-    return arrOfObj.filter((item) => profileTickets?.some((ticket) => ticket?.eventTicketType === item?.ticketLevel))
+    return arrOfObj?.filter((item) => profileTickets?.some((ticket) => ticket?.eventTicketType === item?.ticketLevel))
   }
 
   const filterBasedOnPublic = (arrOfObj) => {
-    return arrOfObj.filter((item) => item?.isPublic === true)
+    return arrOfObj?.filter((item) => item?.isPublic === true)
   }
 
   const imageAssets = filterBasedOnTicket(eventData?.imageEventAssets)
