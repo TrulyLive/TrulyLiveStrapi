@@ -211,7 +211,7 @@ export default function Home({ navData, footerData, videoData, profileData, toke
         </div>
       </div>
       <Footer footerData={footerData} />
-      <script async src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+      <script defer async src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
     </>
   )
 }
