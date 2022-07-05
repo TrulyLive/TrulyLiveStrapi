@@ -119,7 +119,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
         <div className="my-3 mkd">
           <ReactMarkdown rehypePlugins={[rehypeRaw]}>{eventData?.eventDescription}</ReactMarkdown>
         </div>
-        {eventData?.eventDiary.length >= 1 && <h4 className="text-xl my-3 mb-5 font-semibold">Event Diary</h4>}
+        {eventData?.eventDiary?.length >= 1 && <h4 className="text-xl my-3 mb-5 font-semibold">Event Diary</h4>}
         {eventData?.eventDiary?.map((item) => {
           return (
             <div className="my-3" key={item.id}>
