@@ -22,6 +22,11 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
     ?.filter((item) => item?.event?.id === eventId)
     ?.map((item) => item?.eventticket)
     ?.flat()
+  
+  const profileArrTickets = profileTickets?.map((item) => {
+    return item.eventTicketType
+  })
+  
   const allTickets = eventData?.eventTicket
 
   const notBoughtTickets = allTickets?.filter(
