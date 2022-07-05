@@ -15,18 +15,17 @@ import rehypeRaw from 'rehype-raw'
 const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, eventId }) => {
   const router = useRouter()
 
-
   const checkBought = profileData?.purchases?.find((item) => item?.event?.id === eventId)
 
   const profileTickets = profileData?.purchases
     ?.filter((item) => item?.event?.id === eventId)
     ?.map((item) => item?.eventticket)
     ?.flat()
-  
+
   const profileArrTickets = profileTickets?.map((item) => {
     return item.eventTicketType
   })
-  
+
   const allTickets = eventData?.eventTicket
 
   const notBoughtTickets = allTickets?.filter(
@@ -370,7 +369,7 @@ export const getServerSideProps = async ({ req, query: { slug } }) => {
   const footerData = await footerRes.json()
 
   const eventRes = await fetch(
-    `${baseUrl}/events?populate[0]=eventImage,imageEventAssets.imageEventMedia,videoEventAssets.videoEventMedia,eventTicket&filters[eventSlug][$eq]=${slug}`
+    `${baseUrl}/events?populate[0]=eventImage,imageEventAssets.imageEventMedia,videoEventAssets.videoEventMedia,eventTicket,eventDiary&filters[eventSlug][$eq]=${slug}`
   )
   const eventData = await eventRes.json()
 
