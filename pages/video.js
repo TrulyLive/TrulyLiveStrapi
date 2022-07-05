@@ -9,9 +9,7 @@ import Comments from '../components/comments'
 import InputEmoji from 'react-input-emoji'
 import { useRouter } from 'next/router';
 import io from 'socket.io-client';
-//Chat server URL
-const ChatEndPoint = "http://localhost:5000/";
-//
+const ChatEndPoint = "https://1d62-103-115-25-145.ngrok.io";
 
 export default function Home({ navData, footerData, videoData, profileData, token, eventData }) {
 
@@ -23,11 +21,8 @@ export default function Home({ navData, footerData, videoData, profileData, toke
   const [hideDrop, setHideDrop] = useState(null);
   const [currentUser, setCurrentUser] = useState({
     Image: profileData && profileData.image.url,
-    Email: profileData.email
+    Email: profileData && profileData.email
   });
-  //Unique Room By URL path name
-  const UniqueRoomId = router.pathname;
-  //
   //socket initial
   const socket = io(ChatEndPoint, { transports: ["websocket", "polling", "flashsocket"], forceNew: true });
   var selectedUserId = "";
@@ -39,14 +34,7 @@ export default function Home({ navData, footerData, videoData, profileData, toke
     window.addEventListener("resize", changeWindowWidth);
   }, []);
 
-  useEffect(() => {
-    triggerSideBar();
-  }, [windowWidth]);
-  // useEffect(() => {
-  //   console.log(router);
-  //   console.log(videoData);
-  //   console.log(eventData);
-  // }, []);
+
   const changeWindowWidth = () => {
     setWindowWidth([window.innerWidth]);
   }
@@ -58,8 +46,12 @@ export default function Home({ navData, footerData, videoData, profileData, toke
       setSideMenu(true);
     }
   }
+
+  useEffect(() => {
+    triggerSideBar();
+  }, [windowWidth]);
   const LoadData = () => {
-    socket.emit("loadAllComment", { OwnUnique: currentUser.Email, RoomId: UniqueRoomId })
+    socket.emit("loadAllComment", { OwnUnique: currentUser.Email, RoomId: router.pathname })
   }
 
   useEffect(() => {
@@ -79,24 +71,33 @@ export default function Home({ navData, footerData, videoData, profileData, toke
     });
     return function cleanup() {
       socket.off('rcvOwnMsg');
-      socket.off('loadData' + currentUser.Email);
+      socket.off('loadData' + currentUser._id);
     }
   }, [])
   const scrollChatMiddle = () => {
     document.getElementById('usersComments').scrollTop = document.getElementById('usersComments').scrollHeight;
   }
-  const sendText = (data, e) => {
+  const sendText = (data, e, type) => {
     // document.getElementById('messageBox').value = '';
-    if (text.trim() !== '') {
-      if (e.keyCode === 13 && !e.shiftKey) {
-        if (data && data.trim() !== '') {
-          socket.emit("sendMessage", { Email: currentUser.Email, OwnPic: currentUser.Image, Message: data, RoomId: UniqueRoomId })
+    if (type === 'text') {
+      if (text.trim() !== '') {
+        if (e.keyCode === 13 && !e.shiftKey) {
+          if (data && data.trim() !== '') {
+            socket.emit("sendMessage", { Email: currentUser.Email, OwnPic: currentUser.Image, Message: data, RoomId: router.pathname })
+          }
+          e.preventDefault();
         }
-        e.preventDefault();
+      } else {
+        if (e.keyCode === 13)
+          e.preventDefault();
       }
-    } else {
-      if (e.keyCode === 13)
-        e.preventDefault();
+    }
+    else {
+      if (data && data.trim() !== '') {
+        socket.emit("sendMessage", { Email: currentUser.Email, OwnPic: currentUser.Image, Message: data, RoomId: router.pathname })
+      }
+      setText('')
+      e.preventDefault();
     }
 
     scrollChatMiddle();
@@ -170,7 +171,7 @@ export default function Home({ navData, footerData, videoData, profileData, toke
             autoPlay
             poster={videoData?.videoThumbnail?.data?.attributes?.url}
           />
-          <button className={`comment-button btn btn-primary ${!sideMenu && 'd-none'}`} onClick={handleCommentMenu}><i className="fas fa-comment fa-lg"></i></button>
+          <button className={`comment-button btn btn-primary ${!sideMenu && 'd-none'}`} onClick={handleCommentMenu}><img src='/images/comment.png' alt='comments' /></button>
         </div>
         <div className={`comments-div ${sideMenu && 'close'}`}>
           <div className="comment-top">
@@ -179,7 +180,7 @@ export default function Home({ navData, footerData, videoData, profileData, toke
                 <span className='title'>Comments</span>
               </div>
               <div className="col-4 text-right">
-                <a className='btn text-white pt-0' onClick={handleCommentMenu}><i className="fas fa-times fa-lg"></i></a>
+                <a className='btn text-white pt-0' onClick={handleCommentMenu}><img src='/images/close.png' alt='comments' style={{ width: '15px' }} /></a>
               </div>
             </div>
             <hr />
@@ -200,18 +201,18 @@ export default function Home({ navData, footerData, videoData, profileData, toke
                   onChange={setText}
                   cleanOnEnter
                   placeholder="Type a message"
-                  onKeyDown={(e) => sendText(text, e)}
+                  onKeyDown={(e) => sendText(text, e, 'text')}
                 />
               </div>
               <div className="col-1 text-left">
-                <button className='btn ps-0 text-primary mt-2' onClick={() => sendText(text)}><i className="fas fa-paper-plane fa-lg"></i></button>
+                <button className='btn p-0 text-primary mt-2' onClick={(e) => sendText(text, e, 'button')}><img src='/images/send.png' style={{ width: '35px', position: 'relative', top: '5px' }} alt='comments' /></button>
               </div>
             </div>
           </div>
         </div>
       </div>
       <Footer footerData={footerData} />
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
     </>
   )
 }
