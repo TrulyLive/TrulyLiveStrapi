@@ -15,16 +15,20 @@ import rehypeRaw from 'rehype-raw'
 const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, eventId }) => {
   const router = useRouter()
 
-
   const checkBought = profileData?.purchases?.find((item) => item?.event?.id === eventId)
 
   const profileTickets = profileData?.purchases
     ?.filter((item) => item?.event?.id === eventId)
     ?.map((item) => item?.eventticket)
     ?.flat()
+
+  const profileArrTickets = profileTickets?.map((item) => {
+    return item.eventTicketType
+  })
+
   const allTickets = eventData?.eventTicket
 
-  const notBoughtTickets = allTickets.filter(
+  const notBoughtTickets = allTickets?.filter(
     (x) => !profileTickets?.some((y) => x?.eventTicketType === y?.eventTicketType)
   )
 
@@ -68,11 +72,11 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
   }
 
   const filterBasedOnTicket = (arrOfObj) => {
-    return arrOfObj.filter((item) => profileTickets?.some((ticket) => ticket?.eventTicketType === item?.ticketLevel))
+    return arrOfObj?.filter((item) => profileTickets?.some((ticket) => ticket?.eventTicketType === item?.ticketLevel))
   }
 
   const filterBasedOnPublic = (arrOfObj) => {
-    return arrOfObj.filter((item) => item?.isPublic === true)
+    return arrOfObj?.filter((item) => item?.isPublic === true)
   }
 
   const imageAssets = filterBasedOnTicket(eventData?.imageEventAssets)
@@ -119,7 +123,7 @@ const OnBoardingPage = ({ navData, footerData, eventData, profileData, token, ev
         <div className="my-3 mkd">
           <ReactMarkdown rehypePlugins={[rehypeRaw]}>{eventData?.eventDescription}</ReactMarkdown>
         </div>
-        {eventData?.eventDiary.length >= 1 && <h4 className="text-xl my-3 mb-5 font-semibold">Event Diary</h4>}
+        {eventData?.eventDiary?.length >= 1 && <h4 className="text-xl my-3 mb-5 font-semibold">Event Diary</h4>}
         {eventData?.eventDiary?.map((item) => {
           return (
             <div className="my-3" key={item.id}>
@@ -365,7 +369,7 @@ export const getServerSideProps = async ({ req, query: { slug } }) => {
   const footerData = await footerRes.json()
 
   const eventRes = await fetch(
-    `${baseUrl}/events?populate[0]=eventImage,imageEventAssets.imageEventMedia,videoEventAssets.videoEventMedia,eventTicket&filters[eventSlug][$eq]=${slug}`
+    `${baseUrl}/events?populate[0]=eventImage,imageEventAssets.imageEventMedia,videoEventAssets.videoEventMedia,eventTicket,eventDiary&filters[eventSlug][$eq]=${slug}`
   )
   const eventData = await eventRes.json()
 
