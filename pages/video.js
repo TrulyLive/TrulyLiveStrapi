@@ -10,7 +10,8 @@ import InputEmoji from 'react-input-emoji'
 import { useRouter } from 'next/router';
 import io from 'socket.io-client';
 //Chat server URL
-const ChatEndPoint = "https://truly-live-chat-backend.vercel.app/";
+//const ChatEndPoint = "https://truly-live-chat-backend.vercel.app/";
+const ChatEndPoint = "https://trulylivechatbackend.herokuapp.com/"
 //
 
 export default function Home({ navData, footerData, videoData, profileData, token, eventData }) {
